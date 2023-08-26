@@ -8,6 +8,7 @@ import com.example.myshoppinglist.domain.datasource.ShoppingListDatabase
 import com.example.myshoppinglist.domain.use_case.AddEntry
 import com.example.myshoppinglist.domain.use_case.DeleteEntry
 import com.example.myshoppinglist.domain.use_case.GetShoppingList
+import com.example.myshoppinglist.domain.use_case.SetChecked
 import com.example.myshoppinglist.domain.use_case.ShoppingListUseCases
 import dagger.Module
 import dagger.Provides
@@ -46,7 +47,8 @@ class AppModule {
     ): ShoppingListUseCases = ShoppingListUseCases(
         getShoppingList = GetShoppingList(repository),
         addEntry = AddEntry(repository),
-        deleteEntry = DeleteEntry(repository)
+        deleteEntry = DeleteEntry(repository),
+        setChecked = SetChecked(repository)
     )
 }
 

@@ -34,10 +34,14 @@ class ShoppingListViewModel @Inject constructor(
                     useCases.addEntry(event.text)
                 }
             }
-
             is ShoppingListEvent.DeleteEntry -> {
                 viewModelScope.launch {
                     useCases.deleteEntry(event.uuid)
+                }
+            }
+            is ShoppingListEvent.SetChecked -> {
+                viewModelScope.launch {
+                    useCases.setChecked(event.uuid, event.checked)
                 }
             }
         }

@@ -1,7 +1,6 @@
 package com.example.myshoppinglist.ui.composables
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -46,13 +45,16 @@ fun ShoppingListScreen(viewModel: ShoppingListViewModel) {
                 ListEntryCard(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .defaultMinSize(minHeight = 64.dp)
                         .padding(vertical = 4.dp)
                         .animateItemPlacement(),
-                    entry = entry
-                ) {
-                    viewModel.onEvent(ShoppingListEvent.DeleteEntry(entry.uuid))
-                }
+                    entry = entry,
+                    onDeleteEntry = {
+                        viewModel.onEvent(ShoppingListEvent.DeleteEntry(entry.uuid))
+                    },
+                    onCheck = {
+                        viewModel.onEvent(ShoppingListEvent.SetChecked(entry.uuid, it))
+                    }
+                )
             }
         }
     }

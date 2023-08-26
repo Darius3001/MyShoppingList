@@ -16,6 +16,9 @@ interface ShoppingListDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(entry: ShoppingListEntry)
 
-    @Query("DELETE FROM shopping_list WHERE uuid=:uuid")
+    @Query("DELETE FROM shopping_list WHERE uuid = :uuid")
     suspend fun deleteByUuid(uuid: UUID)
+
+    @Query("UPDATE shopping_list SET checked = :checked WHERE uuid = :uuid")
+    suspend fun setChecked(uuid: UUID, checked: Boolean)
 }
