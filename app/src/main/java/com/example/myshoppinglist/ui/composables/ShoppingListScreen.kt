@@ -11,32 +11,40 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import com.example.myshoppinglist.ShoppingListViewModel
 import com.example.myshoppinglist.ui.ShoppingListEvent
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun ShoppingListScreen(viewModel: ShoppingListViewModel) {
-    Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    viewModel.onEvent(ShoppingListEvent.AddEntry("abc"))
-                }
-            ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = null)
-            }
-        }
-    ) { paddingValues ->
+    ConstraintLayout(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 12.dp)
+            .padding(bottom = 12.dp)
+    ) {
+        val (column, input, floatingActionButton) = createRefs()
+
         LazyColumn(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(horizontal = 12.dp)
+                .constrainAs(column) {
+                    top.linkTo(parent.top)
+                    bottom.linkTo(input.top)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+
+                    height = Dimension.fillToConstraints
+                }
         ) {
             items(
                 viewModel.content.value,
@@ -57,6 +65,32 @@ fun ShoppingListScreen(viewModel: ShoppingListViewModel) {
                 )
             }
         }
-    }
 
+        var inputText by remember { mutableStateOf("") }
+
+        TextField(
+            modifier = Modifier.constrainAs(input) {
+                bottom.linkTo(parent.bottom)
+                start.linkTo(parent.start)
+                end.linkTo(floatingActionButton.start, margin = 6.dp)
+
+                width = Dimension.fillToConstraints
+            },
+            value = inputText,
+            onValueChange = { inputText = it }
+        )
+
+        FloatingActionButton(
+            modifier = Modifier.constrainAs(floatingActionButton) {
+                bottom.linkTo(parent.bottom)
+                end.linkTo(parent.end)
+            },
+            onClick = {
+                viewModel.onEvent(ShoppingListEvent.AddEntry(inputText))
+                inputText = ""
+            }
+        ) {
+            Icon(imageVector = Icons.Default.Add, contentDescription = null)
+        }
+    }
 }
