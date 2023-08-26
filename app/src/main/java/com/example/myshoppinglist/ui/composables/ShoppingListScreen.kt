@@ -38,7 +38,7 @@ fun ShoppingListScreen(viewModel: ShoppingListViewModel) {
             .padding(horizontal = 12.dp)
             .padding(bottom = 12.dp)
     ) {
-        val (column, input, floatingActionButton) = createRefs()
+        val (column, input, addButton) = createRefs()
 
         LazyColumn(
             modifier = Modifier
@@ -77,7 +77,7 @@ fun ShoppingListScreen(viewModel: ShoppingListViewModel) {
             modifier = Modifier.constrainAs(input) {
                 bottom.linkTo(parent.bottom)
                 start.linkTo(parent.start)
-                end.linkTo(floatingActionButton.start, margin = 12.dp)
+                end.linkTo(addButton.start, margin = 12.dp)
 
                 width = Dimension.fillToConstraints
             },
@@ -87,7 +87,7 @@ fun ShoppingListScreen(viewModel: ShoppingListViewModel) {
 
         Box(
             modifier = Modifier
-                .constrainAs(floatingActionButton) {
+                .constrainAs(addButton) {
                     bottom.linkTo(parent.bottom)
                     end.linkTo(parent.end)
                     top.linkTo(input.top)
