@@ -9,8 +9,11 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ShoppingListDao {
     @Query("SELECT * FROM shopping_list")
-    fun getAllItems(): Flow<List<ShoppingListEntry>>
+    fun getAllItems(): Flow<List<ShoppingListDBEntry>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(entry: ShoppingListEntry)
+    suspend fun insert(entry: ShoppingListDBEntry)
+
+    @Query("DELETE FROM shopping_list WHERE uuid=:uuid")
+    suspend fun deleteByUuid(uuid: String)
 }
