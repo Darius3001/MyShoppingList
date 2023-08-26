@@ -1,15 +1,18 @@
 package com.example.myshoppinglist.ui.composables
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -18,6 +21,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
@@ -72,7 +77,7 @@ fun ShoppingListScreen(viewModel: ShoppingListViewModel) {
             modifier = Modifier.constrainAs(input) {
                 bottom.linkTo(parent.bottom)
                 start.linkTo(parent.start)
-                end.linkTo(floatingActionButton.start, margin = 6.dp)
+                end.linkTo(floatingActionButton.start, margin = 12.dp)
 
                 width = Dimension.fillToConstraints
             },
@@ -80,15 +85,21 @@ fun ShoppingListScreen(viewModel: ShoppingListViewModel) {
             onValueChange = { inputText = it }
         )
 
-        FloatingActionButton(
-            modifier = Modifier.constrainAs(floatingActionButton) {
-                bottom.linkTo(parent.bottom)
-                end.linkTo(parent.end)
-            },
-            onClick = {
-                viewModel.onEvent(ShoppingListEvent.AddEntry(inputText))
-                inputText = ""
-            }
+        Box(
+            modifier = Modifier
+                .constrainAs(floatingActionButton) {
+                    bottom.linkTo(parent.bottom)
+                    end.linkTo(parent.end)
+                    top.linkTo(input.top)
+                }
+                .clip(RoundedCornerShape(12.dp))
+                .border(2.dp, Color.LightGray, RoundedCornerShape(12.dp))
+                .clickable {
+                    viewModel.onEvent(ShoppingListEvent.AddEntry(inputText))
+                    inputText = ""
+                }
+                .padding(12.dp)
+
         ) {
             Icon(imageVector = Icons.Default.Add, contentDescription = null)
         }
