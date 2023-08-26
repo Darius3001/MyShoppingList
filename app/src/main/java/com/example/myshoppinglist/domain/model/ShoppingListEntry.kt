@@ -1,11 +1,11 @@
-package com.example.myshoppinglist.domain.datasource
+package com.example.myshoppinglist.domain.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.util.UUID
 
 @Entity(tableName = "shopping_list")
-class ShoppingListDBEntry(
+class ShoppingListEntry(
     @PrimaryKey val uuid: UUID = UUID.randomUUID(),
     val text: String,
     val checked: Boolean
