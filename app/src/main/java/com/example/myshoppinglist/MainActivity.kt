@@ -3,6 +3,7 @@ package com.example.myshoppinglist
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import com.example.myshoppinglist.ui.composables.ShoppingListScreen
 import com.example.myshoppinglist.ui.theme.MyShoppingListTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
