@@ -3,6 +3,7 @@ package com.example.myshoppinglist.domain
 import com.example.myshoppinglist.domain.model.ShoppingListEntry
 import com.example.myshoppinglist.domain.datasource.ShoppingListDao
 import kotlinx.coroutines.flow.Flow
+import java.util.UUID
 
 class ShoppingListRepository(
     private val dao: ShoppingListDao
@@ -15,4 +16,6 @@ class ShoppingListRepository(
             checked = checked
         )
     )
+
+    suspend fun removeItem(uuid: UUID) = dao.deleteByUuid(uuid.toString())
 }

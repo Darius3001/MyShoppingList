@@ -7,6 +7,6 @@ class DeleteEntry(
     private val repository: ShoppingListRepository
 ) {
     suspend operator fun invoke(uuid: UUID) {
-
+        repository.removeItem(uuid)
     }
 }
