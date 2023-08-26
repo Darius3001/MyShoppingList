@@ -19,9 +19,11 @@ class ShoppingListViewModel @Inject constructor(
     private val _content: MutableState<List<ShoppingListEntry>> = mutableStateOf(emptyList())
     val content: State<List<ShoppingListEntry>> = _content
 
-    fun addRandom() {
+    init {
         viewModelScope.launch {
-            useCases.addEntry("random")
+            useCases.getShoppingList().collect {
+                _content.value = it
+            }
         }
     }
 
@@ -38,14 +40,7 @@ class ShoppingListViewModel @Inject constructor(
                     useCases.deleteEntry(event.uuid)
                 }
             }
-
-            is ShoppingListEvent.Refresh -> refreshList()
         }
     }
 
-    private fun refreshList() = viewModelScope.launch {
-        useCases.getShoppingList().collect {
-            _content.value = it
-        }
-    }
 }

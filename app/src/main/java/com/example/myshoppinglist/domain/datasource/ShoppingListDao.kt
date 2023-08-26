@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.myshoppinglist.domain.model.ShoppingListEntry
 import kotlinx.coroutines.flow.Flow
+import java.util.UUID
 
 @Dao
 interface ShoppingListDao {
@@ -16,5 +17,5 @@ interface ShoppingListDao {
     suspend fun insert(entry: ShoppingListEntry)
 
     @Query("DELETE FROM shopping_list WHERE uuid=:uuid")
-    suspend fun deleteByUuid(uuid: String)
+    suspend fun deleteByUuid(uuid: UUID)
 }

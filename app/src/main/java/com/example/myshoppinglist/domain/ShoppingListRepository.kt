@@ -17,5 +17,5 @@ class ShoppingListRepository(
         )
     )
 
-    suspend fun removeItem(uuid: UUID) = dao.deleteByUuid(uuid.toString())
+    suspend fun removeItem(uuid: UUID) = dao.deleteByUuid(uuid)
 }
