@@ -8,4 +8,11 @@ class ShoppingListRepository(
     private val dao: ShoppingListDao
 ) {
     fun getShoppingList(): Flow<List<ShoppingListEntry>> = dao.getAllItems()
+
+    suspend fun addItem(text: String, checked: Boolean) = dao.insert(
+        ShoppingListEntry(
+            text = text,
+            checked = checked
+        )
+    )
 }

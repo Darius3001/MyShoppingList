@@ -6,6 +6,6 @@ class AddEntry(
     private val repository: ShoppingListRepository
 ) {
     suspend operator fun invoke(text: String) {
-
+        repository.addItem(text = text, checked = false)
     }
 }

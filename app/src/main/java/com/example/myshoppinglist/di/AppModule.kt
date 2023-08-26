@@ -5,6 +5,10 @@ import androidx.room.Room
 import com.example.myshoppinglist.ShoppingListViewModel
 import com.example.myshoppinglist.domain.ShoppingListRepository
 import com.example.myshoppinglist.domain.datasource.ShoppingListDatabase
+import com.example.myshoppinglist.domain.use_case.AddEntry
+import com.example.myshoppinglist.domain.use_case.DeleteEntry
+import com.example.myshoppinglist.domain.use_case.GetShoppingList
+import com.example.myshoppinglist.domain.use_case.ShoppingListUseCases
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,14 +30,24 @@ class AppModule {
     @Provides
     @Singleton
     fun provideViewModel(
-        repository: ShoppingListRepository
-    ): ShoppingListViewModel = ShoppingListViewModel(repository)
+        useCases: ShoppingListUseCases
+    ): ShoppingListViewModel = ShoppingListViewModel(useCases)
 
     @Provides
     @Singleton
     fun provideRepository(
         db: ShoppingListDatabase
     ): ShoppingListRepository = ShoppingListRepository(db.shoppingListDao())
+
+    @Provides
+    @Singleton
+    fun provideUseCases(
+        repository: ShoppingListRepository
+    ): ShoppingListUseCases = ShoppingListUseCases(
+        getShoppingList = GetShoppingList(repository),
+        addEntry = AddEntry(repository),
+        deleteEntry = DeleteEntry(repository)
+    )
 }
 
 
