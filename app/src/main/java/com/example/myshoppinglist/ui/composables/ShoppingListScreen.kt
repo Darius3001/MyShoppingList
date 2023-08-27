@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -20,18 +22,26 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.example.myshoppinglist.ShoppingListViewModel
 import com.example.myshoppinglist.ui.ShoppingListEvent
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(
+    ExperimentalMaterial3Api::class,
+    ExperimentalFoundationApi::class,
+    ExperimentalComposeUiApi::class
+)
 @Composable
 fun ShoppingListScreen(viewModel: ShoppingListViewModel) {
+
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
@@ -73,6 +83,13 @@ fun ShoppingListScreen(viewModel: ShoppingListViewModel) {
 
         var inputText by remember { mutableStateOf("") }
 
+        val add: () -> Unit = {
+            viewModel.onEvent(ShoppingListEvent.AddEntry(inputText))
+            inputText = ""
+        }
+
+        val keyboardController = LocalSoftwareKeyboardController.current
+
         TextField(
             modifier = Modifier.constrainAs(input) {
                 bottom.linkTo(parent.bottom)
@@ -82,7 +99,19 @@ fun ShoppingListScreen(viewModel: ShoppingListViewModel) {
                 width = Dimension.fillToConstraints
             },
             value = inputText,
-            onValueChange = { inputText = it }
+            onValueChange = { inputText = it },
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    if (inputText.isEmpty()) {
+                        keyboardController?.hide()
+                        return@KeyboardActions
+                    }
+                    add()
+                }
+            ),
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Done
+            )
         )
 
         Box(
@@ -94,10 +123,7 @@ fun ShoppingListScreen(viewModel: ShoppingListViewModel) {
                 }
                 .clip(RoundedCornerShape(12.dp))
                 .border(2.dp, Color.LightGray, RoundedCornerShape(12.dp))
-                .clickable {
-                    viewModel.onEvent(ShoppingListEvent.AddEntry(inputText))
-                    inputText = ""
-                }
+                .clickable { add() }
                 .padding(12.dp)
 
         ) {
